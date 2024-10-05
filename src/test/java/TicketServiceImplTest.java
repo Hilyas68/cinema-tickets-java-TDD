@@ -156,15 +156,17 @@ public class TicketServiceImplTest {
     verify(paymentService, times(1)).makePayment(eq(1L), eq(expected));
   }
 
-  @Test
+  @ParameterizedTest
+  @CsvSource({"1, 1, 1, 2", "3,2,3, 5"})
   @DisplayName("Given a valid accountId and a valid ticket request, then compute number of seats to allocate")
-  public void givenValidTicketRequestComputeSeat() {
+  public void givenValidTicketRequestComputeSeat(int adults, int children, int infants,
+      int expected) {
 
-    TicketTypeRequest adultTicket = new TicketTypeRequest(Type.ADULT, 1);
-    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, 1);
-    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, 1);
+    TicketTypeRequest adultTicket = new TicketTypeRequest(Type.ADULT, adults);
+    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, children);
+    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, infants);
     service.purchaseTickets(1L, adultTicket, childTicket, infantTicket);
 
-    verify(reservationService, times(1)).reserveSeat(eq(1L), eq(2));
+    verify(reservationService, times(1)).reserveSeat(eq(1L), eq(expected));
   }
 }
