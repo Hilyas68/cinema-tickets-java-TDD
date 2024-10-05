@@ -11,6 +11,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.dwp.uc.pairtest.TicketService;
 import uk.gov.dwp.uc.pairtest.TicketServiceImpl;
+import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
+import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest.Type;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,5 +69,20 @@ public class TicketServiceImplTest {
 
     assertEquals("Ticket type request cannot be empty", exception.getMessage(),
         "should return 'Ticket type request cannot be empty'");
+  }
+
+  @Test
+  @DisplayName("Given ticket size is greater than max (25) then throw an exception 'Maximum ticket size exceeded'")
+  public void givenTicketSizeMoreThanMaxThrowException() {
+
+    TicketTypeRequest adultTicket = new TicketTypeRequest(Type.ADULT, 12);
+    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, 10);
+    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, 5);
+
+    InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class,
+        () -> service.purchaseTickets(10L, adultTicket, childTicket, infantTicket));
+
+    assertEquals("Maximum ticket size exceeded", exception.getMessage(),
+        "should return 'Maximum ticket size exceeded'");
   }
 }
