@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import thirdparty.paymentgateway.TicketPaymentService;
+import thirdparty.seatbooking.SeatReservationService;
 import uk.gov.dwp.uc.pairtest.TicketService;
 import uk.gov.dwp.uc.pairtest.TicketServiceImpl;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
@@ -29,11 +30,14 @@ public class TicketServiceImplTest {
   @Mock
   private TicketPaymentService paymentService;
 
+  @Mock
+  private SeatReservationService reservationService;
+
   private TicketService service;
 
   @BeforeEach
   public void setup() {
-    service = new TicketServiceImpl(paymentService);
+    service = new TicketServiceImpl(paymentService, reservationService);
   }
 
   @Test
@@ -150,5 +154,17 @@ public class TicketServiceImplTest {
     service.purchaseTickets(1L, adultTicket, childTicket, infantTicket);
 
     verify(paymentService, times(1)).makePayment(eq(1L), eq(expected));
+  }
+
+  @Test
+  @DisplayName("Given a valid accountId and a valid ticket request, then compute number of seats to allocate")
+  public void givenValidTicketRequestComputeSeat() {
+
+    TicketTypeRequest adultTicket = new TicketTypeRequest(Type.ADULT, 1);
+    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, 1);
+    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, 1);
+    service.purchaseTickets(1L, adultTicket, childTicket, infantTicket);
+
+    verify(reservationService, times(1)).reserveSeat(eq(1L), eq(2));
   }
 }

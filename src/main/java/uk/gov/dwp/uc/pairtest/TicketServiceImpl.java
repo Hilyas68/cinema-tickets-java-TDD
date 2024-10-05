@@ -3,6 +3,7 @@ package uk.gov.dwp.uc.pairtest;
 import java.util.Arrays;
 import java.util.Objects;
 import thirdparty.paymentgateway.TicketPaymentService;
+import thirdparty.seatbooking.SeatReservationService;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest.Type;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
@@ -22,7 +23,8 @@ public class TicketServiceImpl implements TicketService {
 
   private final TicketPaymentService paymentService;
 
-  public TicketServiceImpl(final TicketPaymentService paymentService) {
+  public TicketServiceImpl(final TicketPaymentService paymentService,
+      SeatReservationService reservationService) {
     this.paymentService = paymentService;
   }
 
