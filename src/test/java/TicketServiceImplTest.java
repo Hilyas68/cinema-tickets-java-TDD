@@ -85,4 +85,18 @@ public class TicketServiceImplTest {
     assertEquals("Maximum ticket size exceeded", exception.getMessage(),
         "should return 'Maximum ticket size exceeded'");
   }
+
+  @Test
+  @DisplayName("Given a child/infant tickets without an adult then throw an exception 'Request must contain an adult ticket'")
+  public void givenRequestWithAnAdultThrowException() {
+
+    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, 10);
+    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, 5);
+
+    InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class,
+        () -> service.purchaseTickets(10L, childTicket, infantTicket));
+
+    assertEquals("Request must contain an adult ticket", exception.getMessage(),
+        "should return 'Request must contain an adult ticket'");
+  }
 }
