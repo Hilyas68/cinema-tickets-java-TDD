@@ -71,3 +71,8 @@ Provide a working implementation of a `TicketService` that:
 - Calculates the correct no of seats to reserve and makes a seat reservation request to the `SeatReservationService`.
 
 - Rejects any invalid ticket purchase requests. It is up to you to identify what should be deemed as an invalid purchase request.”
+
+## My Assumptions
+
+- the ticket request will always have positive values for noOfTickets (ticket counts)
+- the adult ticket counts should be more than infant, since infant sits on an Adult's lap
