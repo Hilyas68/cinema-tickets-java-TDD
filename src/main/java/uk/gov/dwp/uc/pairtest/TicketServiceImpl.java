@@ -25,11 +25,14 @@ public class TicketServiceImpl implements TicketService {
       throw new InvalidPurchaseException(ACCOUNT_ID_MUST_BE_GRATER_THAN_MESSAGE);
     }
 
+    validateTicketRequest(ticketTypeRequests);
+  }
+
+  private void validateTicketRequest(final TicketTypeRequest... ticketTypeRequests) {
     if (Objects.isNull(ticketTypeRequests)) {
       throw new InvalidPurchaseException(TICKET_TYPE_CANNOT_BE_NULL_MESSAGE);
     } else if (ticketTypeRequests.length < 1) {
       throw new InvalidPurchaseException(TICKET_TYPE_CANNOT_BE_EMPTY_MESSAGE);
     }
   }
-
 }
