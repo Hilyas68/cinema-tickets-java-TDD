@@ -34,23 +34,13 @@ public class TicketServiceImplTest {
         "should return 'AccountId cannot be null'");
   }
 
-  @Test
-  @DisplayName("Given an account ID is less than zero then throw an exception, with message 'AccountId must be greater than zero'")
-  public void givenAccountIdLessThanZeroThrowException() {
+  @ParameterizedTest
+  @CsvSource({"0", "-1", "-100"})
+  @DisplayName("Given an account ID is less than or equal to zero then throw an exception, with message 'AccountId must be greater than zero'")
+  public void givenAccountIdLessThanZeroThrowException(long input) {
 
     InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class,
-        () -> service.purchaseTickets(-1L));
-
-    assertEquals("AccountId must be greater than zero", exception.getMessage(),
-        "should return 'AccountId must be greater than zero'");
-  }
-
-  @Test
-  @DisplayName("Given an account ID is equal to zero then throw an exception, with message 'AccountId must be greater than zero'")
-  public void givenAccountIIsZeroThrowException(){
-
-    InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class,
-        () -> service.purchaseTickets(0L));
+        () -> service.purchaseTickets(input));
 
     assertEquals("AccountId must be greater than zero", exception.getMessage(),
         "should return 'AccountId must be greater than zero'");
