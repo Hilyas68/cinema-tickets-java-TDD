@@ -34,14 +34,18 @@ public class TicketServiceImpl implements TicketService {
         .mapToInt(TicketTypeRequest::getNoOfTickets)
         .sum();
 
-    if (noOfAdults < 1) {
-      throw new InvalidPurchaseException(REQUIRE_ADULT_MESSAGE);
-    }
-
     int noOfInfants = Arrays.stream(ticketTypeRequests)
         .filter(ticket -> ticket.getTicketType() == Type.INFANT)
         .mapToInt(TicketTypeRequest::getNoOfTickets)
         .sum();
+
+    validateBusinessRules(noOfAdults, noOfInfants);
+  }
+
+  private static void validateBusinessRules(int noOfAdults, int noOfInfants) {
+    if (noOfAdults < 1) {
+      throw new InvalidPurchaseException(REQUIRE_ADULT_MESSAGE);
+    }
 
     if (noOfInfants > noOfAdults) {
       throw new InvalidPurchaseException(INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE);
