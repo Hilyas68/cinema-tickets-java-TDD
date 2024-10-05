@@ -44,9 +44,9 @@ public class TicketServiceImpl implements TicketService {
 
     final TicketDetailDto ticketDetails = getTicketDetails(ticketTypeRequests);
 
-    validateBusinessRules(ticketDetails.noOfAdults(), ticketDetails.noOfInfants(), ticketDetails.noOfChildren());
+    validateBusinessRules(ticketDetails);
 
-    int totalTicketPrice = computeTotalTicketPrice(ticketDetails.noOfAdults(), ticketDetails.noOfChildren());
+    int totalTicketPrice = computeTotalTicketPrice(ticketDetails);
     int totalSeatsToReserve = ticketDetails.noOfAdults() + ticketDetails.noOfChildren();
 
     paymentService.makePayment(accountId, totalTicketPrice);
@@ -72,20 +72,22 @@ public class TicketServiceImpl implements TicketService {
     return new TicketDetailDto(noOfAdults, noOfInfants, noOfChildren);
   }
 
-  private static int computeTotalTicketPrice(int noOfAdults, int noOfChildren) {
-    return (noOfAdults * COST_PER_ADULT) + (noOfChildren * COST_PER_CHILD);
+  private static int computeTotalTicketPrice(final TicketDetailDto ticketDetailDto) {
+    return (ticketDetailDto.noOfAdults() * COST_PER_ADULT) + (ticketDetailDto.noOfChildren()
+        * COST_PER_CHILD);
   }
 
-  private static void validateBusinessRules(int noOfAdults, int noOfInfants, int noOfChildren) {
-    if (noOfAdults < 1) {
+  private static void validateBusinessRules(final TicketDetailDto ticketDetails) {
+    if (ticketDetails.noOfAdults() < 1) {
       throw new InvalidPurchaseException(REQUIRE_ADULT_MESSAGE);
     }
 
-    if (noOfInfants > noOfAdults) {
+    if (ticketDetails.noOfInfants() > ticketDetails.noOfAdults()) {
       throw new InvalidPurchaseException(INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE);
     }
 
-    if ((noOfAdults + noOfInfants + noOfChildren) > MAXIMUM_TICKET_SIZE) {
+    if ((ticketDetails.noOfAdults() + ticketDetails.noOfInfants() + ticketDetails.noOfChildren())
+        > MAXIMUM_TICKET_SIZE) {
       throw new InvalidPurchaseException(TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE);
     }
   }
