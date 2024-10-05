@@ -121,7 +121,7 @@ public class TicketServiceImplTest {
   }
 
   @ParameterizedTest
-  @CsvSource({"3, 2, 3, 105"})
+  @CsvSource({"3, 2, 3, 105", "1,0,0, 25", "1, 1, 1, 40"})
   @DisplayName("Given a valid accountId and a valid ticket request, then validate total amount to pay")
   public void givenValidTicketRequestComputeAmount(int adults, int children, int infants,
       int expected) {
