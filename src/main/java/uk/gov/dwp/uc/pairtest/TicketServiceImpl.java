@@ -27,14 +27,6 @@ public class TicketServiceImpl implements TicketService {
     validateAccountId(accountId);
     validateTicketRequest(ticketTypeRequests);
 
-    int totalNoOfTickets = Arrays.stream(ticketTypeRequests)
-        .mapToInt(TicketTypeRequest::getNoOfTickets)
-        .sum();
-
-    if (totalNoOfTickets > MAXIMUM_TICKET_SIZE) {
-      throw new InvalidPurchaseException(TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE);
-    }
-
     Arrays.stream(ticketTypeRequests)
         .filter(ticket -> ticket.getTicketType() == TicketTypeRequest.Type.ADULT)
         .findAny()
@@ -47,6 +39,14 @@ public class TicketServiceImpl implements TicketService {
       throw new InvalidPurchaseException(TICKET_TYPE_CANNOT_BE_NULL_MESSAGE);
     } else if (ticketTypeRequests.length < 1) {
       throw new InvalidPurchaseException(TICKET_TYPE_CANNOT_BE_EMPTY_MESSAGE);
+    }
+
+    int totalNoOfTickets = Arrays.stream(ticketTypeRequests)
+        .mapToInt(TicketTypeRequest::getNoOfTickets)
+        .sum();
+
+    if (totalNoOfTickets > MAXIMUM_TICKET_SIZE) {
+      throw new InvalidPurchaseException(TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE);
     }
   }
 
