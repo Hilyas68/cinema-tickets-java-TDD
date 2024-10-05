@@ -29,17 +29,21 @@ public class TicketServiceImpl implements TicketService {
     validateAccountId(accountId);
     validateTicketRequest(ticketTypeRequests);
 
-    TicketTypeRequest adultTicket = Arrays.stream(ticketTypeRequests)
+    int noOfAdults = Arrays.stream(ticketTypeRequests)
         .filter(ticket -> ticket.getTicketType() == Type.ADULT)
-        .findAny()
-        .orElseThrow(() -> new InvalidPurchaseException(REQUIRE_ADULT_MESSAGE));
-
-    int noOfInfants = Arrays.stream(ticketTypeRequests)
-        .filter(ticket -> ticket.getTicketType() == TicketTypeRequest.Type.INFANT)
         .mapToInt(TicketTypeRequest::getNoOfTickets)
         .sum();
 
-    if(noOfInfants > adultTicket.getNoOfTickets()){
+    if (noOfAdults < 1) {
+      throw new InvalidPurchaseException(REQUIRE_ADULT_MESSAGE);
+    }
+
+    int noOfInfants = Arrays.stream(ticketTypeRequests)
+        .filter(ticket -> ticket.getTicketType() == Type.INFANT)
+        .mapToInt(TicketTypeRequest::getNoOfTickets)
+        .sum();
+
+    if (noOfInfants > noOfAdults) {
       throw new InvalidPurchaseException(INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE);
     }
   }
