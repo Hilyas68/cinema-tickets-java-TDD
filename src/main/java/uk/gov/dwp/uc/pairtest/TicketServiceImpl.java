@@ -1,5 +1,6 @@
 package uk.gov.dwp.uc.pairtest;
 
+import java.util.Objects;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 
@@ -10,7 +11,9 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
-
+        if(Objects.isNull(accountId)){
+            throw new InvalidPurchaseException();
+        }
     }
 
 }
