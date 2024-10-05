@@ -1,6 +1,10 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -41,6 +45,8 @@ public class TicketServiceImplTest {
 
     assertEquals("AccountId cannot be null", exception.getMessage(),
         "should return 'AccountId cannot be null'");
+
+    verify(paymentService, never()).makePayment(anyLong(), anyInt());
   }
 
   @ParameterizedTest
@@ -53,6 +59,8 @@ public class TicketServiceImplTest {
 
     assertEquals("AccountId must be greater than zero", exception.getMessage(),
         "should return 'AccountId must be greater than zero'");
+
+    verify(paymentService, never()).makePayment(anyLong(), anyInt());
   }
 
   @Test
@@ -64,6 +72,8 @@ public class TicketServiceImplTest {
 
     assertEquals("Ticket type request cannot be null", exception.getMessage(),
         "should return 'Ticket type request cannot be null'");
+
+    verify(paymentService, never()).makePayment(anyLong(), anyInt());
   }
 
   @Test
@@ -75,6 +85,8 @@ public class TicketServiceImplTest {
 
     assertEquals("Ticket type request cannot be empty", exception.getMessage(),
         "should return 'Ticket type request cannot be empty'");
+
+    verify(paymentService, never()).makePayment(anyLong(), anyInt());
   }
 
   @Test
@@ -90,6 +102,8 @@ public class TicketServiceImplTest {
 
     assertEquals("Maximum ticket size exceeded", exception.getMessage(),
         "should return 'Maximum ticket size exceeded'");
+
+    verify(paymentService, never()).makePayment(anyLong(), anyInt());
   }
 
   @Test
@@ -104,6 +118,8 @@ public class TicketServiceImplTest {
 
     assertEquals("Request must contain an adult ticket", exception.getMessage(),
         "should return 'Request must contain an adult ticket'");
+
+    verify(paymentService, never()).makePayment(anyLong(), anyInt());
   }
 
   @Test
@@ -118,6 +134,8 @@ public class TicketServiceImplTest {
 
     assertEquals("Infant ticket must not be more than adult ticket", exception.getMessage(),
         "should return 'Infant ticket must not be more than adult ticket'");
+
+    verify(paymentService, never()).makePayment(anyLong(), anyInt());
   }
 
   @ParameterizedTest
