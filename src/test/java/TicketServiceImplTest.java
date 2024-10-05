@@ -29,7 +29,7 @@ public class TicketServiceImplTest {
 
   @BeforeEach
   public void setup() {
-    service = new TicketServiceImpl();
+    service = new TicketServiceImpl(paymentService);
   }
 
   @Test

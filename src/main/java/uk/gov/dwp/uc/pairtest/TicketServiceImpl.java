@@ -2,6 +2,7 @@ package uk.gov.dwp.uc.pairtest;
 
 import java.util.Arrays;
 import java.util.Objects;
+import thirdparty.paymentgateway.TicketPaymentService;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest.Type;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
@@ -17,6 +18,11 @@ public class TicketServiceImpl implements TicketService {
   public static final String INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE = "Infant ticket must not be more than adult ticket";
   public static final int MAXIMUM_TICKET_SIZE = 25;
 
+  private final TicketPaymentService paymentService;
+
+  public TicketServiceImpl(final TicketPaymentService paymentService) {
+    this.paymentService = paymentService;
+  }
 
   /**
    * Should only have private methods other than the one below.
@@ -40,11 +46,14 @@ public class TicketServiceImpl implements TicketService {
         .sum();
 
     int noOfChildren = Arrays.stream(ticketTypeRequests)
-        .filter(ticket -> ticket.getTicketType() == Type.INFANT)
+        .filter(ticket -> ticket.getTicketType() == Type.CHILD)
         .mapToInt(TicketTypeRequest::getNoOfTickets)
         .sum();
 
     validateBusinessRules(noOfAdults, noOfInfants, noOfChildren);
+
+    int totalTicketPrice = (noOfAdults * 25) + (noOfChildren * 15);
+    paymentService.makePayment(accountId, totalTicketPrice);
   }
 
   private static void validateBusinessRules(int noOfAdults, int noOfInfants, int noOfChildren) {
