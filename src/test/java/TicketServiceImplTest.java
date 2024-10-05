@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,5 +56,16 @@ public class TicketServiceImplTest {
 
     assertEquals("Ticket type request cannot be null", exception.getMessage(),
         "should return 'Ticket type request cannot be null'");
+  }
+
+  @Test
+  @DisplayName("Given ticketTypeRequests is empty then throw an exception, with message 'Ticket type request cannot be empty'")
+  public void givenEmptyTicketTypeRequestThrowException() {
+
+    InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class,
+        () -> service.purchaseTickets(10L));
+
+    assertEquals("Ticket type request cannot be empty", exception.getMessage(),
+        "should return 'Ticket type request cannot be empty'");
   }
 }
