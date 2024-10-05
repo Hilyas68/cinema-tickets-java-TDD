@@ -120,15 +120,17 @@ public class TicketServiceImplTest {
         "should return 'Infant ticket must not be more than adult ticket'");
   }
 
-  @Test
+  @ParameterizedTest
+  @CsvSource({"3, 2, 3, 105"})
   @DisplayName("Given a valid accountId and a valid ticket request, then validate total amount to pay")
-  public void givenValidTicketRequestComputeAmount() {
+  public void givenValidTicketRequestComputeAmount(int adults, int children, int infants,
+      int expected) {
 
-    TicketTypeRequest adultTicket = new TicketTypeRequest(Type.ADULT, 3);
-    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, 2);
-    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, 3);
+    TicketTypeRequest adultTicket = new TicketTypeRequest(Type.ADULT, adults);
+    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, children);
+    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, infants);
     service.purchaseTickets(1L, adultTicket, childTicket, infantTicket);
 
-    verify(paymentService, times(1)).makePayment(eq(1L), eq(105));
+    verify(paymentService, times(1)).makePayment(eq(1L), eq(expected));
   }
 }
