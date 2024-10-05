@@ -12,6 +12,7 @@ public class TicketServiceImpl implements TicketService {
   public static final String TICKET_TYPE_CANNOT_BE_NULL_MESSAGE = "Ticket type request cannot be null";
   public static final String TICKET_TYPE_CANNOT_BE_EMPTY_MESSAGE = "Ticket type request cannot be empty";
   public static final String TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE = "Maximum ticket size exceeded";
+  public static final int MAXIMUM_TICKET_SIZE = 25;
 
 
   /**
@@ -29,7 +30,7 @@ public class TicketServiceImpl implements TicketService {
         .mapToInt(TicketTypeRequest::getNoOfTickets)
         .sum();
 
-    if (totalNoOfTickets > 25) {
+    if (totalNoOfTickets > MAXIMUM_TICKET_SIZE) {
       throw new InvalidPurchaseException(TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE);
     }
   }
