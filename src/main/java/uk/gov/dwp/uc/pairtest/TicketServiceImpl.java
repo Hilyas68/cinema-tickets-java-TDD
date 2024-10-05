@@ -18,7 +18,7 @@ public class TicketServiceImpl implements TicketService {
       throws InvalidPurchaseException {
     if (Objects.isNull(accountId)) {
       throw new InvalidPurchaseException(ACCOUNT_ID_CANNOT_BE_NULL_MESSAGE);
-    } else if (accountId <= 0) {
+    } else if (accountId < 1) {
       throw new InvalidPurchaseException(ACCOUNT_ID_MUST_BE_GRATER_THAN_MESSAGE);
     }
   }
