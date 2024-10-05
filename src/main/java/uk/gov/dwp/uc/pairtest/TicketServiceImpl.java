@@ -86,7 +86,7 @@ public class TicketServiceImpl implements TicketService {
       throw new InvalidPurchaseException(INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE);
     }
 
-    if ((ticketDetails.noOfAdults() + ticketDetails.noOfInfants() + ticketDetails.noOfChildren())
+    if ((ticketDetails.getTotalTicketCount())
         > MAXIMUM_TICKET_SIZE) {
       throw new InvalidPurchaseException(TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE);
     }
