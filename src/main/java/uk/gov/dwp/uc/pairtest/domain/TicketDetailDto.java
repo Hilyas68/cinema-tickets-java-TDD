@@ -1,0 +1,5 @@
+package uk.gov.dwp.uc.pairtest.domain;
+
+public record TicketDetailDto(int noOfAdults, int noOfInfants, int noOfChildren) {
+
+}

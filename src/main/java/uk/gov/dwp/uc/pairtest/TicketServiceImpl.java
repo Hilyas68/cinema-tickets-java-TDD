@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import thirdparty.paymentgateway.TicketPaymentService;
 import thirdparty.seatbooking.SeatReservationService;
+import uk.gov.dwp.uc.pairtest.domain.TicketDetailDto;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest.Type;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
@@ -41,6 +42,18 @@ public class TicketServiceImpl implements TicketService {
     validateAccountId(accountId);
     validateTicketRequest(ticketTypeRequests);
 
+    final TicketDetailDto ticketDetails = getTicketDetails(ticketTypeRequests);
+
+    validateBusinessRules(ticketDetails.noOfAdults(), ticketDetails.noOfInfants(), ticketDetails.noOfChildren());
+
+    int totalTicketPrice = computeTotalTicketPrice(ticketDetails.noOfAdults(), ticketDetails.noOfChildren());
+    int totalSeatsToReserve = ticketDetails.noOfAdults() + ticketDetails.noOfChildren();
+
+    paymentService.makePayment(accountId, totalTicketPrice);
+    reservationService.reserveSeat(accountId, totalSeatsToReserve);
+  }
+
+  private static TicketDetailDto getTicketDetails(final TicketTypeRequest... ticketTypeRequests) {
     int noOfAdults = Arrays.stream(ticketTypeRequests)
         .filter(ticket -> ticket.getTicketType() == Type.ADULT)
         .mapToInt(TicketTypeRequest::getNoOfTickets)
@@ -56,13 +69,7 @@ public class TicketServiceImpl implements TicketService {
         .mapToInt(TicketTypeRequest::getNoOfTickets)
         .sum();
 
-    validateBusinessRules(noOfAdults, noOfInfants, noOfChildren);
-
-    int totalTicketPrice = computeTotalTicketPrice(noOfAdults, noOfChildren);
-    int totalSeatsToReserve = noOfAdults + noOfChildren;
-
-    paymentService.makePayment(accountId, totalTicketPrice);
-    reservationService.reserveSeat(accountId, totalSeatsToReserve);
+    return new TicketDetailDto(noOfAdults, noOfInfants, noOfChildren);
   }
 
   private static int computeTotalTicketPrice(int noOfAdults, int noOfChildren) {
