@@ -17,6 +17,8 @@ public class TicketServiceImpl implements TicketService {
   public static final String REQUIRE_ADULT_MESSAGE = "Request must contain an adult ticket";
   public static final String INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE = "Infant ticket must not be more than adult ticket";
   public static final int MAXIMUM_TICKET_SIZE = 25;
+  public static final int COST_PER_ADULT = 25;
+  public static final int COST_PER_CHILD = 15;
 
   private final TicketPaymentService paymentService;
 
@@ -52,8 +54,12 @@ public class TicketServiceImpl implements TicketService {
 
     validateBusinessRules(noOfAdults, noOfInfants, noOfChildren);
 
-    int totalTicketPrice = (noOfAdults * 25) + (noOfChildren * 15);
+    int totalTicketPrice = computeTotalTicketPrice(noOfAdults, noOfChildren);
     paymentService.makePayment(accountId, totalTicketPrice);
+  }
+
+  private static int computeTotalTicketPrice(int noOfAdults, int noOfChildren) {
+    return (noOfAdults * COST_PER_ADULT) + (noOfChildren * COST_PER_CHILD);
   }
 
   private static void validateBusinessRules(int noOfAdults, int noOfInfants, int noOfChildren) {
