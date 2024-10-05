@@ -3,6 +3,7 @@ package uk.gov.dwp.uc.pairtest;
 import java.util.Arrays;
 import java.util.Objects;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
+import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest.Type;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 
 public class TicketServiceImpl implements TicketService {
@@ -13,6 +14,7 @@ public class TicketServiceImpl implements TicketService {
   public static final String TICKET_TYPE_CANNOT_BE_EMPTY_MESSAGE = "Ticket type request cannot be empty";
   public static final String TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE = "Maximum ticket size exceeded";
   public static final String REQUIRE_ADULT_MESSAGE = "Request must contain an adult ticket";
+  public static final String INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE = "Infant ticket must not be more than adult ticket";
   public static final int MAXIMUM_TICKET_SIZE = 25;
 
 
@@ -27,11 +29,19 @@ public class TicketServiceImpl implements TicketService {
     validateAccountId(accountId);
     validateTicketRequest(ticketTypeRequests);
 
-    Arrays.stream(ticketTypeRequests)
-        .filter(ticket -> ticket.getTicketType() == TicketTypeRequest.Type.ADULT)
+    TicketTypeRequest adultTicket = Arrays.stream(ticketTypeRequests)
+        .filter(ticket -> ticket.getTicketType() == Type.ADULT)
         .findAny()
         .orElseThrow(() -> new InvalidPurchaseException(REQUIRE_ADULT_MESSAGE));
 
+    int noOfInfants = Arrays.stream(ticketTypeRequests)
+        .filter(ticket -> ticket.getTicketType() == TicketTypeRequest.Type.INFANT)
+        .mapToInt(TicketTypeRequest::getNoOfTickets)
+        .sum();
+
+    if(noOfInfants > adultTicket.getNoOfTickets()){
+      throw new InvalidPurchaseException(INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE);
+    }
   }
 
   private void validateTicketRequest(final TicketTypeRequest... ticketTypeRequests) {
