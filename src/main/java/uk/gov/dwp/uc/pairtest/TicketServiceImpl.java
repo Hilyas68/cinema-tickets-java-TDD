@@ -1,5 +1,6 @@
 package uk.gov.dwp.uc.pairtest;
 
+import java.util.Arrays;
 import java.util.Objects;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
 import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
@@ -10,6 +11,7 @@ public class TicketServiceImpl implements TicketService {
   public static final String ACCOUNT_ID_MUST_BE_GRATER_THAN_MESSAGE = "AccountId must be greater than zero";
   public static final String TICKET_TYPE_CANNOT_BE_NULL_MESSAGE = "Ticket type request cannot be null";
   public static final String TICKET_TYPE_CANNOT_BE_EMPTY_MESSAGE = "Ticket type request cannot be empty";
+  public static final String TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE = "Maximum ticket size exceeded";
 
 
   /**
@@ -22,6 +24,14 @@ public class TicketServiceImpl implements TicketService {
 
     validateAccountId(accountId);
     validateTicketRequest(ticketTypeRequests);
+
+    int totalNoOfTickets = Arrays.stream(ticketTypeRequests)
+        .mapToInt(TicketTypeRequest::getNoOfTickets)
+        .sum();
+
+    if (totalNoOfTickets > 25) {
+      throw new InvalidPurchaseException(TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE);
+    }
   }
 
   private void validateTicketRequest(final TicketTypeRequest... ticketTypeRequests) {
