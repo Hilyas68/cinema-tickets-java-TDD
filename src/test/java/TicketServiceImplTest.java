@@ -99,4 +99,18 @@ public class TicketServiceImplTest {
     assertEquals("Request must contain an adult ticket", exception.getMessage(),
         "should return 'Request must contain an adult ticket'");
   }
+
+  @Test
+  @DisplayName("Given an infant tickets exceeds an adult tickets then throw an exception 'Infant ticket must not be more than adult ticket'")
+  public void givenInfantTicketMoreThanAdultTicketThrowException() {
+
+    TicketTypeRequest childTicket = new TicketTypeRequest(Type.ADULT, 5);
+    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, 10);
+
+    InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class,
+        () -> service.purchaseTickets(10L, childTicket, infantTicket));
+
+    assertEquals("Infant ticket must not be more than adult ticket", exception.getMessage(),
+        "should return 'Infant ticket must not be more than adult ticket'");
+  }
 }
