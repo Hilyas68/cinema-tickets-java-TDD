@@ -39,16 +39,25 @@ public class TicketServiceImpl implements TicketService {
         .mapToInt(TicketTypeRequest::getNoOfTickets)
         .sum();
 
-    validateBusinessRules(noOfAdults, noOfInfants);
+    int noOfChildren = Arrays.stream(ticketTypeRequests)
+        .filter(ticket -> ticket.getTicketType() == Type.INFANT)
+        .mapToInt(TicketTypeRequest::getNoOfTickets)
+        .sum();
+
+    validateBusinessRules(noOfAdults, noOfInfants, noOfChildren);
   }
 
-  private static void validateBusinessRules(int noOfAdults, int noOfInfants) {
+  private static void validateBusinessRules(int noOfAdults, int noOfInfants, int noOfChildren) {
     if (noOfAdults < 1) {
       throw new InvalidPurchaseException(REQUIRE_ADULT_MESSAGE);
     }
 
     if (noOfInfants > noOfAdults) {
       throw new InvalidPurchaseException(INFANT_TICKET_MORE_THAN_ADULT_TICKET_MESSAGE);
+    }
+
+    if ((noOfAdults + noOfInfants + noOfChildren) > MAXIMUM_TICKET_SIZE) {
+      throw new InvalidPurchaseException(TICKET_SIZE_CANNOT_EXCEED_MAX_MESSAGE);
     }
   }
 
