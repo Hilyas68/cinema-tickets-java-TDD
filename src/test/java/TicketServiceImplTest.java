@@ -45,4 +45,15 @@ public class TicketServiceImplTest {
     assertEquals("AccountId must be greater than zero", exception.getMessage(),
         "should return 'AccountId must be greater than zero'");
   }
+
+  @Test
+  @DisplayName("Given a null ticketTypeRequests then throw an exception, with message 'Ticket type request cannot be null'")
+  public void givenNullTicketTypeRequestThrowException() {
+
+    InvalidPurchaseException exception = assertThrows(InvalidPurchaseException.class,
+        () -> service.purchaseTickets(10L, null));
+
+    assertEquals("Ticket type request cannot be null", exception.getMessage(),
+        "should return 'Ticket type request cannot be null'");
+  }
 }
