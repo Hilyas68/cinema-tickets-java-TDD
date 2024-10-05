@@ -51,6 +51,7 @@ public class TicketServiceImplTest {
         "should return 'AccountId cannot be null'");
 
     verify(paymentService, never()).makePayment(anyLong(), anyInt());
+    verify(reservationService, never()).reserveSeat(anyLong(), anyInt());
   }
 
   @ParameterizedTest
@@ -65,6 +66,7 @@ public class TicketServiceImplTest {
         "should return 'AccountId must be greater than zero'");
 
     verify(paymentService, never()).makePayment(anyLong(), anyInt());
+    verify(reservationService, never()).reserveSeat(anyLong(), anyInt());
   }
 
   @Test
@@ -78,6 +80,7 @@ public class TicketServiceImplTest {
         "should return 'Ticket type request cannot be null'");
 
     verify(paymentService, never()).makePayment(anyLong(), anyInt());
+    verify(reservationService, never()).reserveSeat(anyLong(), anyInt());
   }
 
   @Test
@@ -91,6 +94,7 @@ public class TicketServiceImplTest {
         "should return 'Ticket type request cannot be empty'");
 
     verify(paymentService, never()).makePayment(anyLong(), anyInt());
+    verify(reservationService, never()).reserveSeat(anyLong(), anyInt());
   }
 
   @Test
@@ -108,6 +112,7 @@ public class TicketServiceImplTest {
         "should return 'Maximum ticket size exceeded'");
 
     verify(paymentService, never()).makePayment(anyLong(), anyInt());
+    verify(reservationService, never()).reserveSeat(anyLong(), anyInt());
   }
 
   @Test
@@ -124,6 +129,7 @@ public class TicketServiceImplTest {
         "should return 'Request must contain an adult ticket'");
 
     verify(paymentService, never()).makePayment(anyLong(), anyInt());
+    verify(reservationService, never()).reserveSeat(anyLong(), anyInt());
   }
 
   @Test
@@ -140,6 +146,7 @@ public class TicketServiceImplTest {
         "should return 'Infant ticket must not be more than adult ticket'");
 
     verify(paymentService, never()).makePayment(anyLong(), anyInt());
+    verify(reservationService, never()).reserveSeat(anyLong(), anyInt());
   }
 
   @ParameterizedTest
