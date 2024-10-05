@@ -19,12 +19,8 @@ public class TicketServiceImpl implements TicketService {
   @Override
   public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests)
       throws InvalidPurchaseException {
-    if (Objects.isNull(accountId)) {
-      throw new InvalidPurchaseException(ACCOUNT_ID_CANNOT_BE_NULL_MESSAGE);
-    } else if (accountId < 1) {
-      throw new InvalidPurchaseException(ACCOUNT_ID_MUST_BE_GRATER_THAN_MESSAGE);
-    }
 
+    validateAccountId(accountId);
     validateTicketRequest(ticketTypeRequests);
   }
 
@@ -33,6 +29,15 @@ public class TicketServiceImpl implements TicketService {
       throw new InvalidPurchaseException(TICKET_TYPE_CANNOT_BE_NULL_MESSAGE);
     } else if (ticketTypeRequests.length < 1) {
       throw new InvalidPurchaseException(TICKET_TYPE_CANNOT_BE_EMPTY_MESSAGE);
+    }
+  }
+
+  private void validateAccountId(final Long accountId) {
+
+    if (Objects.isNull(accountId)) {
+      throw new InvalidPurchaseException(ACCOUNT_ID_CANNOT_BE_NULL_MESSAGE);
+    } else if (accountId < 1) {
+      throw new InvalidPurchaseException(ACCOUNT_ID_MUST_BE_GRATER_THAN_MESSAGE);
     }
   }
 }
