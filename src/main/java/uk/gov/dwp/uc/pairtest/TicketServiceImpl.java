@@ -22,10 +22,12 @@ public class TicketServiceImpl implements TicketService {
   public static final int COST_PER_CHILD = 15;
 
   private final TicketPaymentService paymentService;
+  private final SeatReservationService reservationService;
 
   public TicketServiceImpl(final TicketPaymentService paymentService,
       SeatReservationService reservationService) {
     this.paymentService = paymentService;
+    this.reservationService = reservationService;
   }
 
   /**
@@ -57,7 +59,10 @@ public class TicketServiceImpl implements TicketService {
     validateBusinessRules(noOfAdults, noOfInfants, noOfChildren);
 
     int totalTicketPrice = computeTotalTicketPrice(noOfAdults, noOfChildren);
+    int totalSeatsToReserve = noOfAdults + noOfChildren;
+
     paymentService.makePayment(accountId, totalTicketPrice);
+    reservationService.reserveSeat(accountId, totalSeatsToReserve);
   }
 
   private static int computeTotalTicketPrice(int noOfAdults, int noOfChildren) {
