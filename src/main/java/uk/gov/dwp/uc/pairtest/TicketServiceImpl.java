@@ -8,6 +8,7 @@ public class TicketServiceImpl implements TicketService {
 
   public static final String ACCOUNT_ID_CANNOT_BE_NULL_MESSAGE = "AccountId cannot be null";
   public static final String ACCOUNT_ID_MUST_BE_GRATER_THAN_MESSAGE = "AccountId must be greater than zero";
+  public static final String TICKET_TYPE_CANNOT_BE_NULL_MESSAGE = "Ticket type request cannot be null";
 
   /**
    * Should only have private methods other than the one below.
@@ -20,6 +21,10 @@ public class TicketServiceImpl implements TicketService {
       throw new InvalidPurchaseException(ACCOUNT_ID_CANNOT_BE_NULL_MESSAGE);
     } else if (accountId < 1) {
       throw new InvalidPurchaseException(ACCOUNT_ID_MUST_BE_GRATER_THAN_MESSAGE);
+    }
+
+    if (Objects.isNull(ticketTypeRequests)) {
+      throw new InvalidPurchaseException(TICKET_TYPE_CANNOT_BE_NULL_MESSAGE);
     }
   }
 
