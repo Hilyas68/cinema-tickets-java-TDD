@@ -1,14 +1,18 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import thirdparty.paymentgateway.TicketPaymentService;
 import uk.gov.dwp.uc.pairtest.TicketService;
 import uk.gov.dwp.uc.pairtest.TicketServiceImpl;
 import uk.gov.dwp.uc.pairtest.domain.TicketTypeRequest;
@@ -18,6 +22,8 @@ import uk.gov.dwp.uc.pairtest.exception.InvalidPurchaseException;
 @ExtendWith(MockitoExtension.class)
 public class TicketServiceImplTest {
 
+  @Mock
+  private TicketPaymentService paymentService;
 
   private TicketService service;
 
@@ -112,5 +118,17 @@ public class TicketServiceImplTest {
 
     assertEquals("Infant ticket must not be more than adult ticket", exception.getMessage(),
         "should return 'Infant ticket must not be more than adult ticket'");
+  }
+
+  @Test
+  @DisplayName("Given a valid accountId and a valid ticket request, then validate total amount to pay")
+  public void givenValidTicketRequestComputeAmount() {
+
+    TicketTypeRequest adultTicket = new TicketTypeRequest(Type.ADULT, 3);
+    TicketTypeRequest childTicket = new TicketTypeRequest(Type.CHILD, 2);
+    TicketTypeRequest infantTicket = new TicketTypeRequest(Type.INFANT, 3);
+    service.purchaseTickets(1L, adultTicket, childTicket, infantTicket);
+
+    verify(paymentService, times(1)).makePayment(eq(1L), eq(105));
   }
 }
